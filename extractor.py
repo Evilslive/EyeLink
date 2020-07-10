@@ -8,22 +8,10 @@ import numpy as np
 def d(decimal): # 小數點轉整數(ms)
     return int(float(decimal))
 
-def cost_time(start, end): # 每篇花費時間
-    for i in range(len(start)):
-        t = int((end[i] - start[i])/1000)
-        print("第 {:>2d} 篇, {:d} 秒".format(i+1, t))
-
-def write_down(data:list, name):
-    with open(name+".txt", 'a', errors="replace") as w:
-        for i in data:
-            w.writelines("\t".join(i)+"\n")
-
 #_________________________________ DATA EXTRACTION _________________________________
 
 def read_asc(path):
-    '''
-        OUTPUT:
-    '''
+    '''Use official software convert edf to asc '''
     #res_x, res_y = [], [] # resolution
     #aoi_x, aoi_y = [], [] # area of interest
     note = [] # annotation
@@ -84,8 +72,6 @@ def read_asc(path):
                 saccade.append([sac_x0, sac_y0, sac_x1, sac_y1, sac_du]) # 位置已轉換
                 sac_x0, sac_y0, sac_x1, sac_y1, sac_du = [], [], [], [], []
 
-    #write_down(note, "subj")
-    #write_down(msg, "subj")
     return location, fixation, saccade
 
 #_________________________________ AREA OF INTEREST _________________________________
@@ -129,11 +115,6 @@ def road_IA(path):
 # fixation與gaze所取得的資料差異甚微, 相關約.98以上
 # calculate the accumulated gaze time
 def accumulate_fix_time(rows, text_box, x, y, duration=None): 
-    '''
-        一次一篇  
-        計算fixation時duration留白  
-        計算SR Research 抓取的gaze時, 填入duration
-    '''
     result = []
     temp = []
     for i in text_box: # initail empty result
@@ -159,10 +140,7 @@ def accumulate_fix_time(rows, text_box, x, y, duration=None):
 #_________________________________ SACCADE _________________________________
 
 def word_back(rows, text_box, data): # calculate the accumulated gaze time
-    '''
-        一次一篇, 轉text, 再轉字典計算次數  
-        計算[initial->final, times, cum_duration]
-    '''
+    '''[initial->final, times, cum_duration]'''
     x0, y0, x1, y1, duration = data
 
     axis2word = [[0]]*len(y0)
