@@ -1,11 +1,7 @@
 
 import extractor as ex
-
 import os
 import matplotlib.pyplot as plt
-
-def windmill():
-	return
 
 def subject(path):
     data_list = [] # store subject data list, length for data
@@ -15,50 +11,12 @@ def subject(path):
             data_list.append(int(t[3:-6]))
         else:
             data_list.append(s) # make sure the files in the folder are the same exp.
+    # or create your own subject number
     data_list.sort()
     
     print("The list of subject numbers from files as follows:","\n",data_list)
 	
     return data_list
-
-def divide_group(subj_no, group_no):
-    '''
-        分組 for lv2
-    '''
-    # except subj_no != group_no
-    g = list(set(group_no))
-    g.sort()
-    groups = [[] for i in range(len(g))]
-    for s, t in enumerate(g):
-        for i, j in enumerate(group_no):
-            if t == j:
-                groups[s].append(subj_no[i])
-    return groups
-
-def write_fix_time(subj_list, rows, text_box):
-	for no in subj_list:
-		data = read_asc(path4asc+"twn{:02d}en.asc".format(no))
-		w = open("fixtime_{:02d}.txt".format(no), 'w', errors='replace')
-		print("Subj.No_{:02d}_".format(no)+" Writing...", end="\r")
-		for i in range(len(rows)):
-			result = accumulate_fix_time(rows[i], text_box[i], data[i][0], data[i][1])
-			w.write('\n')
-			w.write("Subj.No_{}_, Page{}".format(no,i+1)+'\n')
-			w.write('\n')
-			for j in result:
-				for k in j:
-					w.writelines(str(k[0])+"\t"+str(k[1][2])+"\n")
-			w.write('\n')
-		print("Subj.No_{:02d}_".format(no)+"Completed !")
-
-def scatter_plot(x,y): # t:timestamp, x, y
-	plt.title("resolution 1ms")
-	plt.plot(x, y)
-	plt.scatter(x, y) # 改變大小 s=[i for i in range(len(x))]
-	#for s, t in enumerate(t): # 點的標註
-	#	if s % 2 == 0:
-	#		plt.annotate(s, (x[s], y[s]) )
-	plt.show()
 
 def write_fix_table(v_axis, h_axis, data, file_name): # 縱軸、橫軸、data
     with open(file_name+".txt", 'w') as w:
@@ -110,7 +68,6 @@ def write_sac_table(v_axis, h_axis, data, file_name):
                     w.write(str(data[s][k][i])+"\t")
                 w.write("\n")
             w.write("\n")
-
 
 def lv1(subj_no, rows, text_box):
     '''
@@ -168,26 +125,18 @@ def lv1(subj_no, rows, text_box):
 
 if __name__ == "__main__":
 
-    path_asc = "J:\\我的雲端硬碟\\dbase\\EyeLink\\"
-    path_L2_ia = "J:\\我的雲端硬碟\\dbase\\EyeLink\\aoi_L2\\"
-    path_L1_ia = "J:\\我的雲端硬碟\\dbase\\EyeLink\\aoi_L1\\"
+    path_asc = "The path where asc files"
+    path_L2_ia = "The path where your L2 aoi files"
+    path_L1_ia = "The path where your L1 aoi files"
 
     #_______________________
 	# get subject file
     data_list = subject(path_asc)
 
-	#_______________________
-	# get AOI for current analysis
+    #_______________________
+    # get AOI for current analysis
     rows, text_box = ex.road_IA(path_L2_ia)
    
     lv1(data_list, rows, text_box)
-
-    # LV2
-    # 1 > low, 2 > high, 3 > inconsist
-    group_no = [1,1,1,3,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,1,3,1,1,1,2,2,2,2,2,3,2,3,2,2,2,2,2,3,2,2,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2]
-    #groups = divide_group(data_list[59:], group_no[59:])
-    
-    #result = lv1(data_list[:2], rows, text_box)
-    #print(result[0])
 
 
